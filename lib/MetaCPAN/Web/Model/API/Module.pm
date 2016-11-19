@@ -124,14 +124,14 @@ sub search_collapsed {
             if ( $run == 1 );
         $hits = @{ $data->{hits}->{hits} || [] };
         @distributions = uniq( @distributions,
-            map { $_->{fields}->{distribution} } @{ $data->{hits}->{hits} } );
+            map { $_->{fields}->{distribution}->[0] } @{ $data->{hits}->{hits} } );
         $run++;
         } while ( @distributions < $page_size + $from
         && $data->{hits}->{total}
         && $data->{hits}->{total} > $hits + ( $run - 2 ) * $RESULTS_PER_RUN );
 
     @distributions
-        = map { $_->[0] } splice( @distributions, $from, $page_size );
+        = splice( @distributions, $from, $page_size );
 
     # Everything else will fail (slowly and quietly) without distributions.
     if ( !@distributions ) {
